@@ -1,0 +1,243 @@
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #F9F7F5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.3s ease;
+}
+
+#changeTheme {
+    flex-grow: 0.5;
+    padding: 13px;
+    background-color: #a3a5f0;
+    color: #fff;
+    font-size: 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#changeTheme:hover {
+    background-color: #5658af;
+}
+
+#changeTheme button:active {
+    background-color: #5658af;
+}
+
+
+h1, h2 {
+    color: #2e3b4e;
+    text-align: center;
+    margin-bottom: 20px;
+}
+h3 {
+    color: white !important;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+/* Секция ввода */
+.input-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input-section input {
+    flex-grow: 8;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 16px;
+    margin-right: 10px;
+    transition: border-color 0.3s;
+}
+
+.input-section input:focus {
+    border-color: #a3a5f0;
+    outline: none;
+}
+
+#addButton {
+    flex-grow: 0.5;
+    padding: 13px;
+    background-color: #a3a5f0;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#addButton:hover {
+    background-color: #5658af;
+}
+
+#addButton button:active {
+    background-color: #5658af;
+}
+
+#refreshButton {
+    flex-grow: 0.1;
+    padding: 13px;
+    background-color: #a3a5f0;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#refreshButton:hover {
+    background-color: #5658af;
+}
+
+#refreshButton button:active {
+    background-color: #5658af;
+}
+
+
+#ingredientList {
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+#ingredientList li {
+    font-size: 16px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+#ingredientList li span {
+    font-style: italic;
+    color: #555;
+}
+
+
+#doneButton {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #a3a5f0;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#doneButton:hover {
+    background-color: #5658af;
+}
+
+#doneButton:active {
+    background-color: #5658af;
+}
+
+/* Список рецептов */
+#recipeList {
+    margin-top: 20px;
+    padding-left: 20px;
+
+}
+
+/* Стили для элементов списка рецептов */
+#recipeList li {
+    font-size: 16px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    list-style-type: none;
+
+}
+
+
+.success-message {
+    color: #a3a5f0;
+}
+
+.error-message {
+    color: red;
+}
+
+/*Окно для информации о выводе*/
+.recipe-card {
+    border: 2px solid #a3a5f0 !important;
+    border-radius: 16px !important;
+    background-color: #a3a5f0 !important;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+
+
+.recipe-card h3 {
+    margin-top: 0;
+    color: white;
+}
+
+.recipe-card h3 a {
+    text-decoration: none;
+    color: white;
+}
+
+.recipe-card h3 a:hover {
+    text-decoration: underline;
+}
+
+.recipe-card p {
+    margin: 4px 0;
+    color: white;
+}
+
+@keyframes gradient {
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/*.loading-container {*/
+/*    display: none;*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 5px;*/
+/*    background-image: repeating-linear-gradient(-45deg, transparent, transparent 1rem, #a3a5f0 1rem, #5658af 2rem);*/
+/*  background-size: 200% 200%;*/
+/*    z-index: 9999;*/
+/*    animation: gradient 20s linear infinite;*/
+/*}*/
+
+/*.loading-bar {*/
+/*    width: 0;*/
+/*    height: 100%;*/
+/*    background-color: #a3a5f0;*/
+/*    transition: width 0.5s;*/
+/*}*/
+
+/*.loading-container.active {*/
+/*    display: block;*/
+/*}*/
+
+
+
+
+
