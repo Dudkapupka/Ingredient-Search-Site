@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск рецептов</title>
+    <link rel="stylesheet" href="/static/lightTheme.css" id="themeStyle">
+</head>
+<body>
+    <div>
+
+        <header>
+            <button id="changeTheme" onclick="changeTheme()">🌗</button>
+        </header>
+
+        <div class="kotpovar">
+            <img src="static/images/burger.png" alt="Котенок-поваренок" width="550" height="550">
+        </div>
+
+        <h1>Поиск рецептов по ингредиентам</h1>
+
+        <div class="input-section">
+            <!-- Поле ввода для ингредиента -->
+            <input type="text" id="ingredientInput" placeholder="Введите продукт" onkeypress="handleEnter(event)">
+
+            <!-- Кнопка для добавления ингредиента -->
+            <button id="addButton" onclick="addIngredient()">+</button>
+
+            <!-- Кнопка для сброса -->
+            <button id="refreshButton" onclick="window.location.reload();">Сброс</button>
+        </div>
+
+        <!-- Место для отображения сообщений (успех/ошибка) -->
+        <p id="statusMessage"></p>
+
+        <!-- Список добавленных ингредиентов -->
+        <ul id="ingredientList"></ul>
+
+        <!-- Кнопка завершения ввода ингредиентов -->
+        <button id="doneButton" onclick="finishInput()">Готово</button>
+
+        <!-- Заголовок для результатов поиска -->
+        <h2>Результаты поиска</h2>
+
+        <!-- Место для отображения найденных рецептов -->
+        <div id="recipeResults"></div>
+    </div>
+
+    <script>
+        let ingredients = new Set();
+
+        // Функция для добавления ингредиента
+        function addIngredient() {
+            const inputField = document.getElementById("ingredientInput");
+            const ingredient = inputField.value.trim().toLowerCase(); // Получаем введенный ингредиент
+
+            if (!ingredient) return;
+
+            // Отправляем запрос на сервер для проверки наличия ингредиента в рецептах
+            fetch("/check-ingredient", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ingredient: ingredient })
+            })
+            .then(response => response.json()) // Обрабатываем ответ от сервера
+            .then(data => {
+                const messageBox = document.getElementById("statusMessage");
+
+                // Убираем предыдущие классы состояния
+                messageBox.classList.remove("success-message", "error-message");
+
+                if (data.status === "found") {
+                    // Если продукт найден, добавляем его в список
+                    ingredients.add(capitalize(data.ingredient));
+                    updateIngredientList(); // Обновляем список ингредиентов
+                    messageBox.classList.add("success-message"); // Применяем класс для успеха
+                    messageBox.textContent = ""
+                } else {
+                    // Если продукт не найден, сообщение об ошибке
+                    messageBox.textContent = "Такого продукта нет в рецептах";
+                    messageBox.classList.add("error-message"); // Применяем класс для ошибки
+                }
+
+                inputField.value = ""; // Очистка поля ввода
+                inputField.focus(); // Ставим фокус обратно на поле ввода
+            });
+        }
+
+        // Функция для обновления списка ингредиентов
+        function updateIngredientList() {
+            const ingredientList = document.getElementById("ingredientList");
+            ingredientList.innerHTML = ""; // Очищаем список перед обновлением
+            ingredients.forEach(ingredient => {
+                const li = document.createElement("li"); // Создаем новый элемент списка
+                li.textContent = ingredient; // Добавляем текст (ингредиент)
+                ingredientList.appendChild(li); // Добавляем в список
+            });
+        }
+
+        // Функция для завершения ввода ингредиентов и поиска рецептов
+        function finishInput() {
+            if (ingredients.size === 0) {
+                const messageBox = document.getElementById("statusMessage");
+                messageBox.textContent = "Пожалуйста, добавьте хотя бы один продукт перед поиском.";
+                messageBox.style.color = "red";
+                return;
+            }
+
+
+
+            // Отправляем запрос на сервер для поиска рецептов по ингредиентам
+            fetch("/get-recipes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ingredients: Array.from(ingredients) })
+            })
+            .then(response => response.json()) // Обрабаботка ответа от сервера
+            .then(data => {
+                const recipeResults = document.getElementById("recipeResults");
+                recipeResults.innerHTML = ""; // Очищаем область с результатами поиска
+
+                if (data.length === 0) {
+                    recipeResults.innerHTML = "<p>Рецепты не найдены.</p>";
+                } else {
+                    data.forEach(recipe => {
+                        const card = document.createElement("div"); // Создаем карточку рецепта
+                        card.className = "recipe-card";
+                        card.innerHTML = `
+                            <h3><a href="${recipe.url}" target="_blank">${recipe.name}</a></h3>
+                            <p><strong>Совпадение:</strong> ${recipe.match_info}</p>
+                            <p><strong>Калории:</strong> ${recipe.calories}</p>
+                            <p><strong>Белки:</strong> ${recipe.proteins}</p>
+                            <p><strong>Жиры:</strong> ${recipe.fats}</p>
+                            <p><strong>Углеводы:</strong> ${recipe.carbs}</p>
+                            <p><strong>Калорий на 100 г:</strong> ${recipe.calories100g}</p>
+                        `;
+                        recipeResults.appendChild(card); // Добавляем карточку в область с результатами
+                    });
+                }
+
+
+            });
+        }
+
+        // Функция для капитализации первого символа строки
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Функция для обработки нажатия клавиши Enter
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                addIngredient();
+            }
+        }
+
+        // Функция для смены темы
+        function changeTheme() {
+            const lightTheme = "/static/lightTheme.css";
+            const darkTheme = "/static/darkTheme.css";
+            const link = document.getElementById('themeStyle');
+            const currentTheme = link.getAttribute("href");
+            link.setAttribute("href", currentTheme === lightTheme ? darkTheme : lightTheme);
+        }
+    </script>
+</body>
+</html>
